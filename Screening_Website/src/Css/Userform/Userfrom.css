@@ -1,0 +1,38 @@
+.banner{
+    background:url('https://wallpaperaccess.com/full/1615368.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+    height: 40vh;
+    position: relative;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.banner_overlay{
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.461);
+}
+.banner_image_content{
+    width: 200px;
+    height: 200px;
+    z-index: 99999;
+    margin-left: 5rem;
+
+}
+.form_wrapper{
+    position: relative;
+    height: 600px;
+    /* background-color: rgb(87,0,127); */
+}
+.form_container{
+    position: absolute;
+    top: -20%;
+    width: 50%  !important;
+  
+    box-shadow: 0 3px 10px rgb(0, 0, 0);
+}

@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+Button{
+    background-color:  rgb(87,0,127) !important;
+    font-weight: 600 !important;
+    color: #fff !important;
+}

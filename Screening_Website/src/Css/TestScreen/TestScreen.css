@@ -39,6 +39,24 @@
     width: 100%;
     padding: 1rem;
     box-shadow: 0 3px 10px rgb(0, 0, 0);
-
-
+}
+.modal_main_container{
+    position: relative;
+    width: 100vw;
+    height: 91vh;
+    background-color: #0000009c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal{
+    background-color: #eee;
+    width: 400px;
+    height: 200px;
+    border-radius: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 0.5rem;
 }

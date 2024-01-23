@@ -2,6 +2,19 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../src/Css/TestScreen/TestScreen.css';
 import { Button } from '@mui/material';
+
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor:'#fff',
+  border:0,
+  p: 4,
+};
+
 const CameraComponent = () => {
 
 
@@ -92,7 +105,7 @@ const CameraComponent = () => {
 
   const [stream, setStream] = useState(null);
   const [recording, setRecording] = useState(false);
-  const [activeCamera ,setActiveCamera] =useState()
+  const [activeCamera ,setActiveCamera] =useState(false)
   const [elapsedTime,setElapsedTime]=useState(0)
   const [questions, setQuestions] = useState([questionsArray]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -142,24 +155,21 @@ const formatTime = (seconds) => {
   const startCamera = async () => {
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
-        },
+        video: true
       });
   
       setStream(mediaStream);
       setActiveCamera(true);
   
-      // Attach the stream to the video element
-      alert('Before if statement');
-      console.log(videoRef.current); // Check the value of videoRef.current
-      if (videoRef.current) {
-        alert('Inside if statement');
-        videoRef.current.srcObject = mediaStream;
-        startTimer();
-      }
+    
   
+   setTimeout(()=>{   
+    if (videoRef.current) {
+     videoRef.current.srcObject = mediaStream;
+     startTimer();
+   }
+   },[100])
+    
       mediaStream.addEventListener('inactive', () => {
         alert('Camera is no longer active');
         setActiveCamera(false);
@@ -236,9 +246,11 @@ const formatTime = (seconds) => {
 
   return (
     <>
+ 
 
-
-      <div className="main_container"  >
+{
+  activeCamera ?
+   <div className="main_container"  >
  
   <div className="question_wrapper">
       {currentQuestion && (
@@ -278,7 +290,18 @@ const formatTime = (seconds) => {
     {<h1>{formatTime(elapsedTime)}</h1>}
     </div>
   </div>
-  </div> 
+  </div> :  
+  <div className="modal_main_container">
+    <div className="modal">
+
+  <h2 style={{fontWeight:'700'}}>Start Your Test by Clicking Below </h2>
+  <p style={{fontWeight:'700',color:'red'}}  >*Please Provide Permission to Webcam</p>
+  <Button onClick={startCamera}> Start test</Button>
+    </div>
+  </div>
+  
+}
+      
     </>
   
   );

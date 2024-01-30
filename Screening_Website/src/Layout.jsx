@@ -8,7 +8,6 @@ const Layout = () => {
        <APIContext>
     <Outlet/>
        </APIContext>
-    <Footer/>
     </>
   )
 }

@@ -17,7 +17,6 @@ const style = {
 
 const CameraComponent = () => {
 
-
   const questionsArray = [
     {
       questionText: "What is the capital of France?",
@@ -103,11 +102,24 @@ const CameraComponent = () => {
     // Add more questions as needed
   ];
 
+ 
+
+  
+  const calenderFunction =()=>{
+    for(let i = 0;i<=questionsArray.length; i++){
+      console.log(i,"<<<<<")
+    }
+  }
+  
+ 
+
+  
+
   const [stream, setStream] = useState(null);
   const [recording, setRecording] = useState(false);
   const [activeCamera ,setActiveCamera] =useState(false)
   const [elapsedTime,setElapsedTime]=useState(0)
-  const [questions, setQuestions] = useState([questionsArray]);
+const [optionAns,setOptionAns]=useState([])
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const videoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -118,7 +130,7 @@ const navigate = useNavigate()
 
 const startTimer =() => {
   let intervalId;
-  intervalId = setInterval(() => {
+  intervalId = setInterval((prevElapsedTime) => {
     setElapsedTime((prevElapsedTime) => prevElapsedTime + 1);
     // Check if elapsed time exceeds the limit (e.g., 0.1 minutes)
     if (prevElapsedTime + 1 >= 0.1 * 60) {
@@ -131,7 +143,7 @@ const startTimer =() => {
 };
 
 useEffect(() => {
-  if (elapsedTime >= 30 * 60) {
+  if (elapsedTime >= 30* 60) {
     stopCamera()
     setElapsedTime(0); // Reset elapsed time to zero
     // handleDownload();
@@ -160,16 +172,13 @@ const formatTime = (seconds) => {
   
       setStream(mediaStream);
       setActiveCamera(true);
-  
-    
-  
    setTimeout(()=>{   
-    if (videoRef.current) {
-     videoRef.current.srcObject = mediaStream;
-     startTimer();
-   }
-   },[100])
-    
+     if (videoRef.current) {
+      videoRef.current.srcObject = mediaStream;
+      startTimer();
+    }
+  },[100])
+  
       mediaStream.addEventListener('inactive', () => {
         alert('Camera is no longer active');
         setActiveCamera(false);
@@ -190,7 +199,7 @@ const formatTime = (seconds) => {
 
   };
 
-  const startRecording = () => {
+const startRecording = () => {
     if (stream && !recording) {
       // Create a new MediaRecorder with the video stream
       mediaRecorderRef.current = new MediaRecorder(stream);
@@ -223,8 +232,9 @@ const formatTime = (seconds) => {
       });
 
       // Start recording
-      // mediaRecorderRef.current.start();
-      // setRecording(true); // Set recording state to true
+      mediaRecorderRef.current.start();
+      setRecording(true); 
+      // Set recording state to true
     }
   };
 
@@ -233,17 +243,24 @@ const formatTime = (seconds) => {
       mediaRecorderRef.current.stop();
     }
   };
-  const [checkbox,setCheckbox]=useState()
+
+  
+
   const handleCheck =(param)=>{
-    setCheckbox(param)
+const newsetAnswer=[...optionAns];
+newsetAnswer[currentQuestionIndex] = param;
+setOptionAns(newsetAnswer)    
   }
-
-
+const handleSubmit=()=>{
+console.log(optionAns)
+}
   const handleNextQuestion = () => {
     setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
   };
   const currentQuestion = questionsArray[currentQuestionIndex];
-
+  const handleQuestionClick = (index) => {
+    setCurrentQuestionIndex(index);
+  };
   return (
     <>
  
@@ -260,7 +277,13 @@ const formatTime = (seconds) => {
             {currentQuestion.options.map((option, index) => (
               <div className="" key={index}>
                    <div className="">
-            <input type="checkbox" value='checkbox 2' checked={checkbox === 2}  onClick={()=>handleCheck(2)}/> <span>{option}</span>
+                   <input
+                      type="checkbox"
+                      value={`checkbox ${index}`}
+                      checked={optionAns[currentQuestionIndex] === option}
+                      onClick={() => handleCheck(option)}
+                    />{' '}
+                    <span>{option}</span>
             </div>
             </div>
             ))}
@@ -274,21 +297,39 @@ const formatTime = (seconds) => {
     <Button onClick={handleNextQuestion}>Next Question</Button>
   </div>
     )}
-
     {
       currentQuestionIndex == questionsArray.length - 1 &&(
         <div className="flex justify-center">
-    <Button >Submit</Button>
+    <Button 
+    onClick={()=>{navigate('/lastPage');
+    // stopCamera()
+    handleSubmit()
+    }}>Submit</Button>
   </div>
       )
     }
   </div>
+  <div className="vedio_main_container">
     <div className='video_Wrapper'>
     <video ref={videoRef}  autoPlay />
     <div className="time_card">
       <h1>Time Left</h1>
     {<h1>{formatTime(elapsedTime)}</h1>}
     </div>
+  </div>
+  <div className='question_calender'>
+
+          {questionsArray.map((_, index) => (
+            <>
+                 <div className='round_number' key={index} onClick={() => handleQuestionClick(index)}>
+              {index + 1}
+            </div>
+            </>
+       
+          ))}
+       
+
+  </div>
   </div>
   </div> :  
   <div className="modal_main_container">
@@ -298,13 +339,12 @@ const formatTime = (seconds) => {
   <p style={{fontWeight:'700',color:'red'}}  >*Please Provide Permission to Webcam</p>
   <Button onClick={startCamera}> Start test</Button>
     </div>
-  </div>
-  
+  </div> 
 }
       
     </>
   
-  );
+  )
 };
 
 export default CameraComponent;

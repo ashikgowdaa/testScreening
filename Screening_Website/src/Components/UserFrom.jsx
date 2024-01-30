@@ -3,9 +3,10 @@ import { Button } from "@mui/material";
 import { ScreeningContext } from "../Context/APIContext";
 import { useContext, useEffect, useState } from "react";
 import "../Css/Userform/Userfrom.css";
+import { useNavigate } from "react-router-dom";
 
 const UserFrom = () => {
-
+const Navigate =useNavigate();
   const fields = [
     {
       type: "string",
